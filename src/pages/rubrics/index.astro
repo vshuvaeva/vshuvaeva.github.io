@@ -1,0 +1,67 @@
+---
+import Base from '../../layouts/Base.astro';
+import { posts, allRubrics, url, plural } from '../../lib/posts.js';
+---
+
+<Base title="Рубрики" active="rubrics">
+  <section class="wrap page">
+    <h1 class="section-title">Рубрики</h1>
+    <div class="grid">
+      {
+        allRubrics.map((r, i) => {
+          const last = posts.find((p) => p.rubric.slug === r.slug);
+          return (
+            <a class="card rubric" href={url(`/rubrics/${r.slug}/`)}>
+              <span class="mono num">{String(i + 1).padStart(2, '0')}</span>
+              <h2>{r.name}</h2>
+              <span class="mono count">{plural(r.count, ['пост', 'поста', 'постов'])}</span>
+              {last && <span class="last">Последний: {last.title}</span>}
+            </a>
+          );
+        })
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page {
+    padding-top: 64px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+    margin-top: 32px;
+  }
+  .rubric {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 24px;
+    text-decoration: none;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .rubric:hover {
+    border-color: #b9cdee;
+    transform: translateY(-2px);
+  }
+  .num {
+    color: var(--accent);
+    font-size: 14px;
+  }
+  h2 {
+    font-size: 24px;
+    font-weight: 800;
+    margin: 4px 0 0;
+  }
+  .count {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .last {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+</style>

@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import { url } from '../lib/posts.js';
+---
+
+<Base title="Страница не найдена">
+  <section class="wrap nf">
+    <p class="mono code">404</p>
+    <h1 class="section-title">Такой страницы нет в выборке</h1>
+    <p>Возможно, пост переехал или ссылка устарела.</p>
+    <a class="btn btn-primary" href={url('/')}>На главную</a>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    padding-top: 100px;
+    text-align: center;
+  }
+  .code {
+    font-size: 64px;
+    color: var(--accent);
+    margin: 0;
+  }
+  p {
+    color: var(--muted);
+    margin: 16px 0 28px;
+  }
+</style>

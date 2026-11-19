@@ -1,0 +1,15 @@
+{
+  "id": 62,
+  "date": "2023-04-19T08:49:04+00:00",
+  "url": "https://t.me/analysts_world/62",
+  "views": "2.25K",
+  "forwardedFrom": null,
+  "html": "<b>🔥</b><b> </b> <b>Свежее тестовое с решением! <br></b>Это не мое, но меня попросили помочь.. 😀<br>А вообще по прогнозам Всемирного экономического форума, с 2020 до 2030 года количество вакансий для аналитика данных вырастет на 25%. Так что кто еще сомневается стоит ли идти в аналитики - <b>дерзайте</b>! Как писал Гюстав Флобер (французский писатель) \"<i>Самые восхитительные моменты вашей жизни — это не дни так называемого успеха, а, скорее, те времена, когда уныние и отчаяние порождают в вашей душе желание бросить вызов жизни, и предвкушение грядущих свершений.</i>\"<br><br><b>1а</b>.<br>SELECT *<br>FROM stream<br>WHERE stream_name LIKE '%Мой первый стрим на <a href=\"http://wasd.tv/\" target=\"_blank\" rel=\"noopener\">wasd.tv</a>%'<br><br><b>1.b.<br></b>SELECT *<br>FROM stream<br>WHERE created_at = '2020-01-01'<br><br><b>2.</b> SELECT COUNT(distinct stream_id)<br>FROM stream<br><br><b>3.</b> SELECT EXTRACT(DAY FROM created_at) as day,<br>COUNT(distinct stream_id)<br>FROM stream<br>WHERE created_at &gt; CURDATE() - INTERVAL 30 DAY<br>GROUP BY 1<br><br><b>4.</b> SELECT EXTRACT(DAY FROM created_at) as day,<br>COUNT(distinct stream_id) as count_stream<br>FROM stream<br>GROUP BY 1<br>HAVING count_stream &gt;=1000<br><br><b>5.</b> SELECT * <br>  FROM stream s    <br>  JOIN stream_status ss<br>        ON <a href=\"http://s.id/\" target=\"_blank\" rel=\"noopener\">s.id</a> = <a href=\"http://ss.id/\" target=\"_blank\" rel=\"noopener\">ss.id</a><br>  JOIN profile p<br>        ON s.user_id = p.user_id<br> WHERE s.created_at = CURDATE() <br>   AND ss.stream_status = 'RUNNING'<br>   AND p.created_at &lt; '2020-01-01'",
+  "text": "🔥  Свежее тестовое с решением! Это не мое, но меня попросили помочь.. 😀А вообще по прогнозам Всемирного экономического форума, с 2020 до 2030 года количество вакансий для аналитика данных вырастет на 25%. Так что кто еще сомневается стоит ли идти в аналитики - дерзайте! Как писал Гюстав Флобер (французский писатель) \"Самые восхитительные моменты вашей жизни — это не дни так называемого успеха, а, скорее, те времена, когда уныние и отчаяние порождают в вашей душе желание бросить вызов жизни, и предвкушение грядущих свершений.\"1а.SELECT *FROM streamWHERE stream_name LIKE '%Мой первый стрим на wasd.tv%'1.b.SELECT *FROM streamWHERE created_at = '2020-01-01'2. SELECT COUNT(distinct stream_id)FROM stream3. SELECT EXTRACT(DAY FROM created_at) as day,COUNT(distinct stream_id)FROM streamWHERE created_at > CURDATE() - INTERVAL 30 DAYGROUP BY 14. SELECT EXTRACT(DAY FROM created_at) as day,COUNT(distinct stream_id) as count_streamFROM streamGROUP BY 1HAVING count_stream >=10005. SELECT *   FROM stream s      JOIN stream_status ss        ON s.id = ss.id  JOIN profile p        ON s.user_id = p.user_id WHERE s.created_at = CURDATE()    AND ss.stream_status = 'RUNNING'   AND p.created_at < '2020-01-01'",
+  "images": [
+    "/media/62-1.jpg"
+  ],
+  "videos": [],
+  "docs": [],
+  "linkPreview": null
+}

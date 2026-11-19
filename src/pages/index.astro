@@ -1,0 +1,160 @@
+---
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+import { posts, allRubrics, config, channel, statValue, url } from '../lib/posts.js';
+
+const [featured, ...rest] = posts;
+const latest = rest.slice(0, 8);
+const photo = config.photo ? url(config.photo) : channel.avatar ? url(channel.avatar) : null;
+---
+
+<Base>
+  <section class="wrap hero">
+    <div class="hero-text">
+      <p class="eyebrow">{config.tagline}</p>
+      <h1>{config.title}</h1>
+      <p class="lead">{config.description}</p>
+      <div class="actions">
+        <a class="btn btn-primary" href={url('/posts/')}>Читать блог ↗</a>
+        <a class="btn btn-ghost" href={config.links.telegram} target="_blank" rel="noopener" data-track="subscribe_click">
+          Подписаться в Telegram
+        </a>
+      </div>
+    </div>
+    <div class="hero-photo">
+      {photo ? <img src={photo} alt={config.title} /> : <div class="photo-ph">ваше фото</div>}
+    </div>
+  </section>
+
+  <section class="wrap stats">
+    {
+      config.stats.map((s) => (
+        <div class="card stat">
+          <div class="mono value">{statValue(s.value)}</div>
+          <div class="label">{s.label}</div>
+        </div>
+      ))
+    }
+  </section>
+
+  <section class="wrap feed">
+    <div class="feed-head">
+      <h2 class="section-title">Свежие посты</h2>
+      <div class="chips">
+        <a class="chip is-active" href={url('/posts/')}>Все</a>
+        {allRubrics.map((r) => <a class="chip" href={url(`/rubrics/${r.slug}/`)}>{r.name}</a>)}
+      </div>
+    </div>
+
+    {featured && <PostCard post={featured} featured />}
+
+    <div class="grid">
+      {latest.map((p) => <PostCard post={p} />)}
+    </div>
+
+    <div class="more">
+      <a class="btn btn-ghost" href={url('/posts/')}>Все посты · <span class="mono">{posts.length}</span></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: 48px;
+    align-items: center;
+    padding-top: 72px;
+  }
+  .eyebrow {
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0 0 16px;
+  }
+  h1 {
+    font-size: clamp(42px, 7vw, 72px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.035em;
+    margin: 0 0 22px;
+  }
+  .lead {
+    font-size: 18px;
+    color: var(--ink-2);
+    max-width: 34em;
+    margin: 0 0 28px;
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .hero-photo img,
+  .photo-ph {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 28px;
+    border: 1px solid var(--line);
+    box-shadow: 0 24px 60px rgba(11, 92, 213, 0.12);
+  }
+  .photo-ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #d6e3f7;
+    color: #5b7bb0;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-top: 64px;
+  }
+  .stat {
+    padding: 22px 24px;
+  }
+  .stat .value {
+    font-size: clamp(30px, 4vw, 40px);
+    color: var(--accent);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .stat .label {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .feed {
+    margin-top: 88px;
+  }
+  .feed-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+    margin-top: 14px;
+  }
+  .more {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+  }
+  @media (max-width: 760px) {
+    .hero {
+      grid-template-columns: 1fr;
+      padding-top: 40px;
+      gap: 32px;
+    }
+    .hero-photo {
+      max-width: 220px;
+      grid-row: 1;
+    }
+  }
+</style>

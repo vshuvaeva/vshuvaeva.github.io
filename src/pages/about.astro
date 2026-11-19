@@ -1,0 +1,99 @@
+---
+import Base from '../layouts/Base.astro';
+import { config, channel, statValue, url } from '../lib/posts.js';
+const photo = config.photo ? url(config.photo) : channel.avatar ? url(channel.avatar) : null;
+---
+
+<Base title="Обо мне" active="about">
+  <section class="wrap about">
+    <div>
+      <p class="eyebrow">{config.tagline}</p>
+      <h1 class="section-title">Обо мне</h1>
+      <p class="lead">{config.description}</p>
+      <p>
+        Здесь собраны все посты из Telegram-канала «{config.title}»: разборы A/B-тестов, SQL и Python с рабочим кодом,
+        задачки с собеседований и истории из жизни аналитика. Новые посты появляются на сайте автоматически.
+      </p>
+
+      <div class="links">
+        <a class="card link" href={config.links.telegram} target="_blank" rel="noopener" data-track="telegram_click">
+          <span class="mono">01</span><strong>Telegram-канал</strong><span>@{config.channel} · {statValue('auto:subscribers')} подписчиков</span>
+        </a>
+        {
+          config.links.linkedin && (
+            <a class="card link" href={config.links.linkedin} target="_blank" rel="noopener" data-track="linkedin_click">
+              <span class="mono">02</span><strong>LinkedIn</strong><span>Опыт и профессиональные публикации</span>
+            </a>
+          )
+        }
+      </div>
+    </div>
+    {photo && <img class="photo" src={photo} alt={config.title} />}
+  </section>
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 48px;
+    padding-top: 64px;
+    align-items: start;
+  }
+  .eyebrow {
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0 0 14px;
+  }
+  .lead {
+    font-size: 20px;
+    color: var(--ink);
+    margin: 22px 0 14px;
+  }
+  p {
+    color: var(--ink-2);
+  }
+  .links {
+    display: grid;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .link {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    column-gap: 12px;
+    padding: 18px 22px;
+    text-decoration: none;
+    transition: border-color 0.15s;
+  }
+  .link:hover {
+    border-color: var(--accent);
+  }
+  .link .mono {
+    grid-row: span 2;
+    color: var(--accent);
+    font-size: 14px;
+    padding-top: 2px;
+  }
+  .link span:last-child {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .photo {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 28px;
+    border: 1px solid var(--line);
+    box-shadow: 0 24px 60px rgba(11, 92, 213, 0.12);
+  }
+  @media (max-width: 760px) {
+    .about {
+      grid-template-columns: 1fr;
+    }
+    .photo {
+      max-width: 320px;
+      grid-row: 1;
+    }
+  }
+</style>

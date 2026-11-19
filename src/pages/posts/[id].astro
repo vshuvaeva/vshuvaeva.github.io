@@ -1,0 +1,295 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { posts, formatDate, url } from '../../lib/posts.js';
+
+export function getStaticPaths() {
+  return posts.map((post, i) => ({
+    params: { id: String(post.id) },
+    props: { post, newer: posts[i - 1] || null, older: posts[i + 1] || null },
+  }));
+}
+
+const { post, newer, older } = Astro.props;
+const related = posts.filter((p) => p.rubric.slug === post.rubric.slug && p.id !== post.id).slice(0, 3);
+---
+
+<Base title={post.title} description={post.excerpt} image={post.images[0]}>
+  <article class="wrap post">
+    <a class="back" href={url('/posts/')}>← Все посты</a>
+    <div class="meta">
+      <a class="chip" data-rubric={post.rubric.slug} href={url(`/rubrics/${post.rubric.slug}/`)}>{post.rubric.name}</a>
+      <span class="mono">{formatDate(post.date)} · {post.readMinutes} мин чтения{post.views && ` · ${post.views} просмотров`}</span>
+    </div>
+    <h1>{post.title}</h1>
+
+    {post.forwardedFrom && <p class="fwd">Переслано из «{post.forwardedFrom}»</p>}
+
+    {
+      post.images.length > 0 && (
+        <div class:list={['gallery', { multi: post.images.length > 1 }]}>
+          {post.images.map((src) => (
+            <a href={src} target="_blank" rel="noopener">
+              <img src={src} alt="" loading="lazy" />
+            </a>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      post.videos.map((v) => (
+        <a class="video" href={v.href} target="_blank" rel="noopener" data-track="video_click">
+          {v.thumb && <img src={v.thumb} alt="" loading="lazy" />}
+          <span class="play">▶ Смотреть видео в Telegram</span>
+        </a>
+      ))
+    }
+
+    <div class="content" set:html={post.bodyHtml} />
+
+    {
+      post.linkPreview?.url && (
+        <a class="card preview" href={post.linkPreview.url} target="_blank" rel="noopener">
+          {post.linkPreview.site && <span class="mono site">{post.linkPreview.site}</span>}
+          {post.linkPreview.title && <strong>{post.linkPreview.title}</strong>}
+          {post.linkPreview.description && <span class="desc">{post.linkPreview.description}</span>}
+        </a>
+      )
+    }
+
+    <div class="card discuss">
+      <div>
+        <strong>Понравился пост?</strong>
+        <p>Ставьте реакции и обсуждайте в Telegram — там же выходят новые посты.</p>
+      </div>
+      <a class="btn btn-primary" href={post.url} target="_blank" rel="noopener" data-track="discuss_click">Открыть в Telegram ↗</a>
+    </div>
+
+    <nav class="pager">
+      {older ? <a href={url(`/posts/${older.id}/`)}><span class="mono">← Раньше</span>{older.title}</a> : <span />}
+      {newer ? <a class="right" href={url(`/posts/${newer.id}/`)}><span class="mono">Позже →</span>{newer.title}</a> : <span />}
+    </nav>
+  </article>
+
+  {
+    related.length > 0 && (
+      <section class="wrap related">
+        <h2 class="section-title">Ещё в рубрике «{post.rubric.name}»</h2>
+        <div class="grid">
+          {related.map((p) => <PostCard post={p} />)}
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .post {
+    max-width: 780px;
+    padding-top: 56px;
+  }
+  .back {
+    font-size: 14px;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .back:hover {
+    color: var(--accent);
+  }
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 28px 0 16px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  h1 {
+    font-size: clamp(30px, 5vw, 46px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    margin: 0 0 28px;
+  }
+  .fwd {
+    color: var(--muted);
+    font-size: 14px;
+    margin: -12px 0 24px;
+  }
+  .gallery {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .gallery.multi {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .gallery img {
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+  }
+  .gallery.multi img {
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+  .video {
+    position: relative;
+    display: block;
+    margin-bottom: 28px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--code-bg);
+    text-decoration: none;
+  }
+  .video img {
+    width: 100%;
+    opacity: 0.7;
+  }
+  .play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    padding: 12px 20px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .content {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--ink-2);
+    overflow-wrap: anywhere;
+  }
+  .content :global(a) {
+    color: var(--accent);
+    text-underline-offset: 3px;
+  }
+  .content :global(b),
+  .content :global(strong) {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .content :global(pre) {
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.6;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 18px 20px;
+    border-radius: var(--radius);
+    overflow-x: auto;
+    white-space: pre;
+    overflow-wrap: normal;
+    margin: 16px 0;
+  }
+  .content :global(code) {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    padding: 2px 6px;
+    border-radius: 6px;
+  }
+  .content :global(pre code) {
+    background: none;
+    color: inherit;
+    padding: 0;
+  }
+  .content :global(blockquote) {
+    margin: 16px 0;
+    padding: 4px 0 4px 18px;
+    border-left: 3px solid var(--accent);
+    color: var(--muted);
+  }
+  .content :global(.spoiler) {
+    background: var(--line-strong);
+    color: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .content :global(.spoiler:hover) {
+    color: inherit;
+    background: none;
+  }
+  .preview {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 24px;
+    padding: 16px 20px;
+    border-left: 3px solid var(--accent);
+    text-decoration: none;
+  }
+  .preview .site {
+    font-size: 12px;
+    color: var(--accent);
+  }
+  .preview .desc {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .discuss {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 48px;
+    padding: 22px 24px;
+  }
+  .discuss p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 28px;
+  }
+  .pager a {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+  }
+  .pager a:hover {
+    color: var(--accent);
+  }
+  .pager .mono {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .pager .right {
+    text-align: right;
+  }
+  .related {
+    margin-top: 80px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+    margin-top: 24px;
+  }
+  @media (max-width: 640px) {
+    .content {
+      font-size: 17px;
+    }
+    .pager {
+      grid-template-columns: 1fr;
+    }
+    .pager .right {
+      text-align: left;
+    }
+  }
+</style>

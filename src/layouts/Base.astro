@@ -1,0 +1,69 @@
+---
+import '../styles/global.css';
+import Analytics from '../components/Analytics.astro';
+import { config, channel, url } from '../lib/posts.js';
+
+const { title, description = config.description, image, active } = Astro.props;
+const pageTitle = title ? `${title} — ${config.title}` : config.title;
+const ogImage = new URL(image || channel.avatar || '/favicon.svg', Astro.site).href;
+const nav = [
+  { href: '/posts/', label: 'Посты', key: 'posts' },
+  { href: '/rubrics/', label: 'Рубрики', key: 'rubrics' },
+  { href: '/about/', label: 'Обо мне', key: 'about' },
+];
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="theme-color" content="#eef4fd" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Onest:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <Analytics />
+  </head>
+  <body>
+    <div class="nav-holder">
+      <nav class="nav" aria-label="Основное меню">
+        <a class="brand" href={url('/')}>Мир аналитика</a>
+        {
+          nav.map((n) => (
+            <a class="link" href={url(n.href)} aria-current={active === n.key ? 'page' : undefined}>
+              {n.label}
+            </a>
+          ))
+        }
+        <a class="btn btn-primary" href={config.links.telegram} target="_blank" rel="noopener" data-track="telegram_click">
+          Telegram ↗
+        </a>
+      </nav>
+    </div>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <span>© {new Date().getFullYear()} {config.title}</span>
+        <span>
+          Посты публикуются в <a href={config.links.telegram} target="_blank" rel="noopener">Telegram-канале</a> и
+          автоматически появляются здесь
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

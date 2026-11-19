@@ -1,0 +1,13 @@
+{
+  "id": 32,
+  "date": "2022-09-13T15:36:36+00:00",
+  "url": "https://t.me/analysts_world/32",
+  "views": "1.75K",
+  "forwardedFrom": null,
+  "html": "<b>HAVING</b> Это Present Continuous в английском, но речь тут не об этом. 😜<br>Это команда в <b>SQL</b>, которая фильтрует результат группировки. Разберем на рабочем примере. <br><br>Казалось бы, у нас же есть уже условие WHERE, куда мы вписываем условия.<br>Но если нам нужно вывести клиентов с месячным оборотом больше одного миллиона, то WHERE нам тут не поможет. А вот HAVING спасет ситуацию.<br><br>Найдем суммы выручки за месяц по каждому клиенту, а потом HAVING отберет тех, у кого сумма <b><i>avg_amount</i></b> получилась больше миллиона<br><br><i>select p.ACCOUNT_ID, <br>    sum(case when p.currency in ('RUB','RUR') then p.amount else (p.amount * cr.rate) end)/(MONTH(CURRENT_DATE) - 1) as <b>avg_amount</b>,<br>from sales.payment p -- вытаскиваем из базы платежей<br>left join sales.currency c - - присоединяем базу с валютами<br>    on p.currency = c.code  - - по совпадающему ключу<br>left join sales.currency_rate cr - - присоединяем базу с курсами валют<br>    on </i><a href=\"http://c.id/\" target=\"_blank\" rel=\"noopener\"><i>c.id</i></a><i> = cr.currency_id   - - по совпадающему ключу<br>where p.created_at &lt;= CURRENT_DATE group by 1 - - группировка по номеру клиента<br>having <b>avg_amount</b> &gt; 1000000<br><br></i>Тут, кстати, видно как работает оператор case 👌 когда нужно посчитать выручку в рублях",
+  "text": "HAVING Это Present Continuous в английском, но речь тут не об этом. 😜Это команда в SQL, которая фильтрует результат группировки. Разберем на рабочем примере. Казалось бы, у нас же есть уже условие WHERE, куда мы вписываем условия.Но если нам нужно вывести клиентов с месячным оборотом больше одного миллиона, то WHERE нам тут не поможет. А вот HAVING спасет ситуацию.Найдем суммы выручки за месяц по каждому клиенту, а потом HAVING отберет тех, у кого сумма avg_amount получилась больше миллионаselect p.ACCOUNT_ID,     sum(case when p.currency in ('RUB','RUR') then p.amount else (p.amount * cr.rate) end)/(MONTH(CURRENT_DATE) - 1) as avg_amount,from sales.payment p -- вытаскиваем из базы платежейleft join sales.currency c - - присоединяем базу с валютами    on p.currency = c.code  - - по совпадающему ключуleft join sales.currency_rate cr - - присоединяем базу с курсами валют    on c.id = cr.currency_id   - - по совпадающему ключуwhere p.created_at <= CURRENT_DATE group by 1 - - группировка по номеру клиентаhaving avg_amount > 1000000Тут, кстати, видно как работает оператор case 👌 когда нужно посчитать выручку в рублях",
+  "images": [],
+  "videos": [],
+  "docs": [],
+  "linkPreview": null
+}
