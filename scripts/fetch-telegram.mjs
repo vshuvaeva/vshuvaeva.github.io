@@ -143,9 +143,21 @@ async function saveChannelInfo($) {
   $('.tgme_channel_info_counter').each((_, c) => {
     counters[$(c).find('.counter_type').text().trim()] = $(c).find('.counter_value').text().trim();
   });
+  // Аватарка: берём крупную версию (320px) со страницы t.me/<канал>, иначе мелкую (160px)
   let avatar = null;
-  const img = $('.tgme_channel_info_header .tgme_page_photo_image img').attr('src');
-  if (img) avatar = await download(img.startsWith('//') ? 'https:' + img : img, `avatar.${extOf(img)}`);
+  try {
+    const page = cheerio.load(await get(`https://t.me/${config.channel}`));
+    let img = page('meta[property="og:image"]').attr('content');
+    if (!img || /telegram\.org\/img/.test(img)) img = $('.tgme_channel_info_header .tgme_page_photo_image img').attr('src');
+    if (img) {
+      if (img.startsWith('//')) img = 'https:' + img;
+      await fs.writeFile(path.join(MEDIA_DIR, 'avatar.jpg'), await get(img, true));
+      avatar = '/media/avatar.jpg';
+    }
+  } catch (err) {
+    console.warn('Не удалось обновить аватарку:', err.message);
+    if (await exists(path.join(MEDIA_DIR, 'avatar.jpg'))) avatar = '/media/avatar.jpg';
+  }
   const info = {
     title: $('.tgme_channel_info_header_title').text().trim(),
     description: $('.tgme_channel_info_description').text().trim(),
