@@ -151,7 +151,6 @@ async function saveChannelInfo($) {
     description: $('.tgme_channel_info_description').text().trim(),
     subscribers: counters.subscribers || counters.subscriber || null,
     avatar,
-    updatedAt: new Date().toISOString(),
   };
   await fs.writeFile(CHANNEL_FILE, JSON.stringify(info, null, 2) + '\n');
   return info;
