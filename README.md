@@ -55,5 +55,21 @@ npm run dev     # сайт на http://localhost:4321
 > Если у репозитория другое имя (например, `blog`), сайт будет по адресу
 > `https://vshuvaeva.github.io/blog/` — тогда в `astro.config.mjs` впишите `base: '/blog'`.
 
+## Домен analystworld.ru
+
+Домен куплен на reg.ru. В DNS-зоне домена:
+
+| Имя | Тип | Значение |
+|---|---|---|
+| @ | A | 185.199.108.153 |
+| @ | A | 185.199.109.153 |
+| @ | A | 185.199.110.153 |
+| @ | A | 185.199.111.153 |
+| www | CNAME | vshuvaeva.github.io. |
+
+На GitHub: **Settings → Pages → Custom domain** = `analystworld.ru`, включён **Enforce HTTPS**.
+Адрес сайта также указан в `site.config.mjs` (`site`). Старый адрес
+https://vshuvaeva.github.io автоматически перенаправляет на домен.
+
 GitHub отключает расписание в репозиториях без активности 60 дней. Пока в канал
 выходят посты, робот сам делает коммиты и расписание не отключается.

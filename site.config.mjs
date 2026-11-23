@@ -5,8 +5,8 @@ export default {
   // Telegram-канал, из которого забираются посты
   channel: 'analysts_world',
 
-  // Адрес сайта на GitHub Pages
-  site: 'https://vshuvaeva.github.io',
+  // Адрес сайта (свой домен, подключён к GitHub Pages)
+  site: 'https://analystworld.ru',
 
   title: 'Мир аналитика данных',
   tagline: 'Аналитик данных · автор канала @analysts_world',
