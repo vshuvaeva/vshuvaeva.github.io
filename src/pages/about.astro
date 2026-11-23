@@ -9,7 +9,12 @@ const photo = config.photo ? url(config.photo) : channel.avatar ? url(channel.av
     <div>
       <p class="eyebrow">{config.tagline}</p>
       <h1 class="section-title">Обо мне</h1>
-      <p class="lead">{config.description}</p>
+      {
+        (config.about || []).map((text, i) => (
+          <p class:list={{ lead: i === 0 }}>{text}</p>
+        ))
+      }
+      <p>{config.description}</p>
       <p>
         Здесь собраны все посты из Telegram-канала «{config.title}»: разборы A/B-тестов, SQL и Python с рабочим кодом,
         задачки с собеседований и истории из жизни аналитика. Новые посты появляются на сайте автоматически.
@@ -83,6 +88,7 @@ const photo = config.photo ? url(config.photo) : channel.avatar ? url(channel.av
     width: 100%;
     aspect-ratio: 4 / 5;
     object-fit: cover;
+    object-position: 50% 30%;
     border-radius: 28px;
     border: 1px solid var(--line);
     box-shadow: 0 24px 60px rgba(11, 92, 213, 0.12);
