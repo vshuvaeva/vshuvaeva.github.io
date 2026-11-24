@@ -37,7 +37,10 @@ export default {
   },
 
   // Рубрики: пост попадает в первую рубрику, у которой совпало
-  // хотя бы одно ключевое слово (регистр не важен).
+  // хотя бы одно ключевое слово (регистр не важен). Порядок проверки:
+  // 1) заголовок поста; 2) если в посте есть код — SQL или Python по коду;
+  // 3) весь текст: рубрика, чьи слова встречаются чаще (минимум 3 раза).
+  // Ничего не подошло — «Вне выборки».
   rubrics: [
     {
       slug: 'interview',
@@ -50,9 +53,14 @@ export default {
       keywords: ['a/b', 'а/б', 'ab-тест', 'аб-тест', 'a/b-тест', 'mde', 'srm', 't-тест', 'бутстрап', 'статзначим', 'p-value'],
     },
     {
-      slug: 'sql-python',
-      name: 'SQL и Python',
-      keywords: ['sql', 'python', 'pandas', 'duckdb', 'select', 'оконн', 'join'],
+      slug: 'sql',
+      name: 'SQL',
+      keywords: ['sql', 'select', 'оконн', 'join', 'duckdb', 'postgres', 'clickhouse', 'unnest', 'group by', 'lag('],
+    },
+    {
+      slug: 'python',
+      name: 'Python',
+      keywords: ['python', 'питон', 'pandas', 'numpy', 'scipy', 'jupyter', 'датафрейм', 'dataframe'],
     },
     {
       slug: 'events',

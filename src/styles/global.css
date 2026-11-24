@@ -169,6 +169,10 @@ a.chip:hover {
   background: #e4ecfb;
   color: #3c3489;
 }
+.chip[data-rubric='python'] {
+  background: #fdf1c9;
+  color: #6b4d00;
+}
 .chip[data-rubric='events'] {
   background: #dff3ea;
   color: #085041;

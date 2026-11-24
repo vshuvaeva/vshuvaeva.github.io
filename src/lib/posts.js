@@ -55,15 +55,50 @@ function splitTitle(html) {
 }
 
 // Сначала ищем рубрику по пометке в посте, потом по заголовку, и только потом по всему тексту
-function rubricOf(marker, title, text) {
+function rubricOf(marker, title, text, html) {
   if (marker && /вне выборки/i.test(marker)) return config.defaultRubric;
-  for (const haystack of [marker, title, text]) {
+  // В пометке и заголовке побеждает рубрика, чьё слово стоит раньше всех
+  // («Pandas: … groupby + join» — это Python, а не SQL)
+  for (const haystack of [marker, title]) {
     if (!haystack) continue;
     const h = haystack.toLowerCase();
-    const r = config.rubrics.find((r) => r.keywords.some((k) => h.includes(k.toLowerCase())));
-    if (r) return r;
+    let first = null;
+    let firstPos = Infinity;
+    for (const r of config.rubrics) {
+      for (const k of r.keywords) {
+        const pos = h.indexOf(k.toLowerCase());
+        if (pos !== -1 && pos < firstPos) {
+          first = r;
+          firstPos = pos;
+        }
+      }
+    }
+    if (first) return first;
   }
-  return config.defaultRubric;
+  // Если в посте есть код — рубрику определяет язык кода
+  const code = [...(html || '').matchAll(/<pre>([\s\S]*?)<\/pre>/g)].map((m) => m[1].toLowerCase()).join('\n');
+  if (code) {
+    const sqlScore = (code.match(/\b(select|from|where|join|group by|order by|over\s*\(|with\s+\w+\s+as)\b/g) || []).length;
+    const pyScore = (code.match(/\b(import|def|print\(|pd\.|np\.|df\[|df\.|lambda|for \w+ in)\b/g) || []).length;
+    const slug = sqlScore >= pyScore ? 'sql' : 'python';
+    const r = config.rubrics.find((r) => r.slug === slug);
+    if (r && (sqlScore || pyScore)) return r;
+  }
+  // По всему тексту: побеждает рубрика с наибольшим числом совпадений,
+  // но только если совпадений достаточно (иначе это пост «вне выборки»)
+  const MIN_HITS = 3;
+  const h = (text || '').toLowerCase();
+  const count = (k) => h.split(k.toLowerCase()).length - 1;
+  let best = null;
+  let bestScore = 0;
+  for (const r of config.rubrics) {
+    const score = r.keywords.reduce((s, k) => s + count(k), 0);
+    if (score > bestScore) {
+      best = r;
+      bestScore = score;
+    }
+  }
+  return bestScore >= MIN_HITS ? best : config.defaultRubric;
 }
 
 const tidyCode = (html) =>
@@ -77,7 +112,7 @@ function normalize(p) {
   const bodyHtml = tidyCode(body.replace(/^(\s*<br\s*\/?>)+/, '').trim());
   const bodyText = stripTags(bodyHtml.replace(/<br\s*\/?>/g, ' '));
   const words = (p.text || '').split(/\s+/).filter(Boolean).length;
-  const rubric = rubricOf(marker, title, p.text);
+  const rubric = rubricOf(marker, title, p.text, p.html);
   return {
     ...p,
     title,

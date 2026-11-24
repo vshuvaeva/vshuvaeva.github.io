@@ -6,4 +6,8 @@ export default defineConfig({
   // Если репозиторий называется не <логин>.github.io, а, например, blog,
   // укажите здесь base: '/blog'
   base: '/',
+  // Старые адреса рубрик → новые
+  redirects: {
+    '/rubrics/sql-python': '/rubrics/sql',
+  },
 });
