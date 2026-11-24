@@ -1,0 +1,113 @@
+---
+// Плашка про cookie. Показывается, пока посетитель не нажал «Принять» или
+// «Отказаться». Выбор хранится в браузере посетителя (localStorage).
+// Ссылка с атрибутом data-cookie-settings снова открывает плашку.
+import config from '../../site.config.mjs';
+import { url } from '../lib/posts.js';
+const enabled = !!(config.analytics.yandexMetrikaId || config.analytics.posthogKey);
+const requireConsent = !!config.analytics.requireConsent;
+---
+
+{
+  enabled && (
+    <div class="cookie" id="cookie-banner" role="dialog" aria-live="polite" aria-label="Использование cookie" hidden>
+      <p>
+        Сайт использует cookie и Яндекс Метрику, чтобы понимать, какие посты читают и что можно улучшить.
+        Подробнее — в <a href={url('/privacy/')}>политике конфиденциальности</a>.
+      </p>
+      <div class="actions">
+        {requireConsent && (
+          <button type="button" class="btn btn-ghost" data-consent="declined">
+            Отказаться
+          </button>
+        )}
+        <button type="button" class="btn btn-primary" data-consent="accepted">
+          {requireConsent ? 'Принять' : 'Понятно'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+<script is:inline>
+  (function () {
+    var banner = document.getElementById('cookie-banner');
+    if (!banner) return;
+    var get = function () { try { return localStorage.getItem('cookie-consent'); } catch (e) { return null; } };
+    var set = function (v) { try { localStorage.setItem('cookie-consent', v); } catch (e) {} };
+
+    if (!get()) banner.hidden = false;
+
+    banner.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-consent]');
+      if (!btn) return;
+      var choice = btn.getAttribute('data-consent');
+      set(choice);
+      banner.hidden = true;
+      if (choice === 'accepted' && window.__loadAnalytics) window.__loadAnalytics();
+    });
+
+    document.addEventListener('click', function (e) {
+      var link = e.target.closest && e.target.closest('[data-cookie-settings]');
+      if (!link) return;
+      e.preventDefault();
+      // Выбор сбрасывается: если человек передумает и откажется,
+      // счётчик перестанет загружаться со следующей страницы.
+      try { localStorage.removeItem('cookie-consent'); } catch (err) {}
+      banner.hidden = false;
+    });
+  })();
+</script>
+
+<style>
+  .cookie {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    z-index: 50;
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 18px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(14, 23, 38, 0.14);
+  }
+  .cookie[hidden] {
+    display: none;
+  }
+  .cookie p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .cookie a {
+    color: var(--accent);
+  }
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .actions .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  @media (max-width: 600px) {
+    .cookie {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .actions .btn {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+</style>

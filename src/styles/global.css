@@ -205,6 +205,11 @@ a.chip:hover {
 .footer a {
   color: var(--muted);
 }
+.footer .legal {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
 
 @media (max-width: 640px) {
   body {

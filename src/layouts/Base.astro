@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Analytics from '../components/Analytics.astro';
+import CookieBanner from '../components/CookieBanner.astro';
 import { config, channel, url } from '../lib/posts.js';
 
 const { title, description = config.description, image, active } = Astro.props;
@@ -63,7 +64,12 @@ const nav = [
           Посты публикуются в <a href={config.links.telegram} target="_blank" rel="noopener">Telegram-канале</a> и
           автоматически появляются здесь
         </span>
+        <span class="legal">
+          <a href={url('/privacy/')}>Политика конфиденциальности</a>
+          <a href="#" data-cookie-settings>Настройки cookie</a>
+        </span>
       </div>
     </footer>
+    <CookieBanner />
   </body>
 </html>
