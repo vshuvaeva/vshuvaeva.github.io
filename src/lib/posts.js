@@ -112,7 +112,10 @@ function normalize(p) {
   const bodyHtml = tidyCode(body.replace(/^(\s*<br\s*\/?>)+/, '').trim());
   const bodyText = stripTags(bodyHtml.replace(/<br\s*\/?>/g, ' '));
   const words = (p.text || '').split(/\s+/).filter(Boolean).length;
-  const rubric = rubricOf(marker, title, p.text, p.html);
+  const forced = config.rubricOverrides?.[p.id];
+  const rubric =
+    (forced && [...config.rubrics, config.defaultRubric].find((r) => r.slug === forced)) ||
+    rubricOf(marker, title, p.text, p.html);
   return {
     ...p,
     title,

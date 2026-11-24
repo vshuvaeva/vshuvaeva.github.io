@@ -173,10 +173,6 @@ a.chip:hover {
   background: #fdf1c9;
   color: #6b4d00;
 }
-.chip[data-rubric='events'] {
-  background: #dff3ea;
-  color: #085041;
-}
 
 /* Карточки */
 .card {

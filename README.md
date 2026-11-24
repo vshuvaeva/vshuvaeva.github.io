@@ -20,6 +20,8 @@
 |---|---|
 | Тексты, цифры на главной, ссылки, фото | `site.config.mjs` |
 | Рубрики и ключевые слова для них | `site.config.mjs` → `rubrics` |
+| Перенести пост в другую рубрику | `site.config.mjs` → `rubricOverrides` |
+| Скрыть пост с сайта | `site.config.mjs` → `hiddenPosts` |
 | Счётчики Яндекс Метрики / PostHog | `site.config.mjs` → `analytics` |
 | Цвета и шрифты | `src/styles/global.css` (переменные в начале файла) |
 | Главная страница | `src/pages/index.astro` |

@@ -62,14 +62,19 @@ export default {
       name: 'Python',
       keywords: ['python', 'питон', 'pandas', 'numpy', 'scipy', 'jupyter', 'датафрейм', 'dataframe'],
     },
-    {
-      slug: 'events',
-      name: 'Ивенты',
-      keywords: ['конференц', 'митап', 'meetup', 'digital day', 'fuckup', 'ивент', 'офисе'],
-    },
   ],
   // Рубрика для всего, что не подошло ни под одну рубрику выше
   defaultRubric: { slug: 'other', name: 'Вне выборки' },
+
+  // Ручной выбор рубрики для отдельных постов — главнее автоматики.
+  // Формат: номер поста: 'код рубрики'. Коды рубрик:
+  //   'interview' — Задачки с собеседований, 'ab-tests' — A/B-тесты,
+  //   'sql' — SQL, 'python' — Python, 'other' — Вне выборки.
+  // Номер поста виден на странице поста на сайте (#310) и в ссылке
+  // на пост в Telegram: t.me/analysts_world/310.
+  rubricOverrides: {
+    310: 'other', // Я сменила работу!!!
+  },
 
   // Рекламные посты (с пометкой «Реклама» / erid) на сайт не попадают
   skipAds: true,

@@ -9,5 +9,6 @@ export default defineConfig({
   // Старые адреса рубрик → новые
   redirects: {
     '/rubrics/sql-python': '/rubrics/sql',
+    '/rubrics/events': '/rubrics/other',
   },
 });
