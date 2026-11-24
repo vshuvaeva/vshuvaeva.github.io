@@ -12,8 +12,7 @@ const requireConsent = !!config.analytics.requireConsent;
   enabled && (
     <div class="cookie" id="cookie-banner" role="dialog" aria-live="polite" aria-label="Использование cookie" hidden>
       <p>
-        Сайт использует cookie и Яндекс Метрику, чтобы понимать, какие посты читают и что можно улучшить.
-        Подробнее — в <a href={url('/privacy/')}>политике конфиденциальности</a>.
+        Сайт использует cookie. <a href={url('/privacy/')}>Подробнее</a>
       </p>
       <div class="actions">
         {requireConsent && (
@@ -63,19 +62,17 @@ const requireConsent = !!config.analytics.requireConsent;
   .cookie {
     position: fixed;
     left: 16px;
-    right: 16px;
     bottom: 16px;
     z-index: 50;
-    max-width: 720px;
-    margin: 0 auto;
+    max-width: calc(100% - 32px);
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 16px 18px;
+    gap: 14px;
+    padding: 8px 8px 8px 18px;
     background: #fff;
     border: 1px solid var(--line);
-    border-radius: 18px;
-    box-shadow: 0 12px 40px rgba(14, 23, 38, 0.14);
+    border-radius: 999px;
+    box-shadow: 0 8px 28px rgba(14, 23, 38, 0.12);
   }
   .cookie[hidden] {
     display: none;
@@ -95,19 +92,9 @@ const requireConsent = !!config.analytics.requireConsent;
     flex-shrink: 0;
   }
   .actions .btn {
-    padding: 10px 16px;
+    padding: 8px 16px;
     font-size: 14px;
     cursor: pointer;
     font-family: inherit;
-  }
-  @media (max-width: 600px) {
-    .cookie {
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .actions .btn {
-      flex: 1;
-      justify-content: center;
-    }
   }
 </style>

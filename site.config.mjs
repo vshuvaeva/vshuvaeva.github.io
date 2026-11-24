@@ -94,7 +94,7 @@ export default {
     posthogHost: 'https://eu.i.posthog.com',
     // true — счётчики включаются только после того, как посетитель нажал
     // «Принять» на плашке про cookie. false — сразу, плашка только сообщает.
-    requireConsent: true,
+    requireConsent: false,
   },
 
   // Владелец сайта — для политики конфиденциальности (/privacy/)
