@@ -19,7 +19,7 @@ const related = posts.filter((p) => p.rubric.slug === post.rubric.slug && p.id !
     <a class="back" href={url('/posts/')}>← Все посты</a>
     <div class="meta">
       <a class="chip" data-rubric={post.rubric.slug} href={url(`/rubrics/${post.rubric.slug}/`)}>{post.rubric.name}</a>
-      <span class="mono">{formatDate(post.date)} · {post.readMinutes} мин чтения{post.views && ` · ${post.views} просмотров`} · #{post.id}</span>
+      <span class="mono">{formatDate(post.date)}{post.views && ` · ${post.views} просмотров`} · #{post.id}</span>
     </div>
     <h1>{post.title}</h1>
 

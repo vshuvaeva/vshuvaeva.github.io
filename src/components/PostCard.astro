@@ -10,7 +10,7 @@ const cover = post.images[0] || post.videos[0]?.thumb;
   <div class="body">
     <div class="meta">
       <a class="chip" data-rubric={post.rubric.slug} href={url(`/rubrics/${post.rubric.slug}/`)}>{post.rubric.name}</a>
-      <span class="mono small">{formatDate(post.date)} · {post.readMinutes} мин</span>
+      <span class="mono small">{formatDate(post.date)}</span>
     </div>
     <h3>{post.title}</h3>
     {post.excerpt && <p class="excerpt">{post.excerpt}</p>}
