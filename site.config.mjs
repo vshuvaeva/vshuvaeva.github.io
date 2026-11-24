@@ -89,7 +89,7 @@ export default {
 
   // Аналитика посещений. Пусто — счётчики не подключаются.
   analytics: {
-    yandexMetrikaId: '', // например '12345678'
+    yandexMetrikaId: '114655229', // счётчик «Мир аналитика данных» в Яндекс Метрике
     posthogKey: '', // например 'phc_...'
     posthogHost: 'https://eu.i.posthog.com',
   },
