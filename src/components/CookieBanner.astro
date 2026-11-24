@@ -21,7 +21,7 @@ const requireConsent = !!config.analytics.requireConsent;
           </button>
         )}
         <button type="button" class="btn btn-primary" data-consent="accepted">
-          {requireConsent ? 'Принять' : 'Понятно'}
+          {requireConsent ? 'Принять' : 'Хорошо'}
         </button>
       </div>
     </div>
@@ -61,9 +61,11 @@ const requireConsent = !!config.analytics.requireConsent;
 <style>
   .cookie {
     position: fixed;
-    left: 16px;
+    left: 50%;
+    transform: translateX(-50%);
     bottom: 16px;
     z-index: 50;
+    width: max-content;
     max-width: calc(100% - 32px);
     display: flex;
     align-items: center;
