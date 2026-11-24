@@ -15,6 +15,12 @@ const related = posts.filter((p) => p.rubric.slug === post.rubric.slug && p.id !
 ---
 
 <Base title={post.title} description={post.excerpt} image={post.images[0]}>
+  <script is:inline define:vars={{ rubricName: post.rubric.name, postLabel: `#${post.id} ${post.title}` }}>
+    // Какие рубрики читают: в Метрике «Параметры визитов → Просмотр поста»
+    var inner = {};
+    inner[rubricName] = postLabel;
+    window.trackParams && window.trackParams({ 'Просмотр поста': inner });
+  </script>
   <article class="wrap post">
     <a class="back" href={url('/posts/')}>← Все посты</a>
     <div class="meta">

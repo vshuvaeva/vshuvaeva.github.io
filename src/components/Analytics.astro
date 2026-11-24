@@ -16,6 +16,8 @@ const settings = {
   phKey: posthogKey || null,
   phHost: posthogHost,
   requireConsent: !!requireConsent,
+  // код рубрики → название, чтобы в отчётах были понятные имена
+  rubrics: Object.fromEntries([...config.rubrics, config.defaultRubric].map((r) => [r.slug, r.name])),
 };
 ---
 
@@ -54,8 +56,35 @@ const settings = {
     try { if (window.ym && window.__ymId) window.ym(window.__ymId, 'reachGoal', name, props); } catch (e) {}
     try { if (window.posthog && window.posthog.capture) window.posthog.capture(name, props); } catch (e) {}
   };
+  // Параметры визита: в Метрике — отчёт «Посетители → Параметры визитов»
+  window.trackParams = function (params) {
+    try { if (window.ym && window.__ymId) window.ym(window.__ymId, 'params', params); } catch (e) {}
+  };
+
+  // Откуда кликнули: главная, список постов, страница поста, рубрика
+  window.__pageKind = function () {
+    var p = location.pathname;
+    if (p === '/' || p === '') return 'с главной';
+    if (/^\/posts\/\d+\/?$/.test(p)) return 'со страницы поста';
+    if (/^\/posts\/?$/.test(p)) return 'из списка постов';
+    if (/^\/rubrics\//.test(p)) return 'со страницы рубрик';
+    return 'с другой страницы';
+  };
+
   document.addEventListener('click', function (e) {
-    var el = e.target.closest && e.target.closest('[data-track]');
+    if (!e.target.closest) return;
+    var el = e.target.closest('[data-track]');
     if (el) window.track(el.getAttribute('data-track'), { href: el.getAttribute('href') || '', page: location.pathname });
+
+    // Клики по рубрикам — любые ссылки на /rubrics/<код>/ и чипс «Все»
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    var m = a.getAttribute('href').match(/\/rubrics\/([^/]+)\/?$/);
+    var name = m ? settings.rubrics[m[1]] : a.classList.contains('chip') && /\/posts\/?$/.test(a.getAttribute('href')) ? 'Все' : null;
+    if (!name) return;
+    var from = window.__pageKind();
+    var inner = {}; inner[name] = from;
+    window.trackParams({ 'Клик по рубрике': inner });
+    window.track('rubric_click', { rubric: name, from: from });
   });
 </script>
